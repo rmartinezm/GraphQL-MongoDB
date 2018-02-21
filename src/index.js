@@ -31,9 +31,6 @@ app.use('/graphql', express.json(), graphqlExpress({
         User
     }
 }));
-app.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql'
-}));
 
 // Launch Express
 app.listen(app.get('port'), () => {
