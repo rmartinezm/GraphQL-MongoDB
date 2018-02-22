@@ -19,7 +19,7 @@ mongoose.connect('mongodb://localhost/exampleDatabase').then(
 });
  
 // Express Configurations
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3300);
 
 // Schemas
 const userSchema = makeExecutableSchema({
