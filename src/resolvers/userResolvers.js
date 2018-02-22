@@ -19,6 +19,10 @@ export default {
                 .catch(err => null);
             return user == null? null: await user.remove();
         },
+        clearUsersDatabase: async (parent, args, { User }) => {
+            let any = await User.remove({});
+            return await User.find();
+        },
         updateEmal: async (parent, { id, email }, { User }) => {
             let user = await User.findOne({'_id': id})
                 /* USER NOT FOUND*/
