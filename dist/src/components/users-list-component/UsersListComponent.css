@@ -1,6 +1,11 @@
 .listContent {
     width: 20%;
-    background-color: #43dbfc;
+    border: solid;
+    border-width: 0.5px;
+    border-left: none;
+    border-bottom: none;
+    border-top: none;
+    border-color: #dbdbdb;
 }
 .title {
     font-size: 16px;
