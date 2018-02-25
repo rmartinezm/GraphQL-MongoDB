@@ -1,22 +1,36 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import './UsersListComponent.css';
+// GraphQL
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { List, ListItem } from 'material-ui';
-import * as Icons from 'material-ui/svg-icons';
-import './UsersListComponent.css';
-
+// Material UI
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
   
     render() {
-      let users = this.props.data.allUsers;
-      if (users == null)
+      if (this.props.data.loading) 
         return (<div>Loading . . .</div>);
+      if (this.props.data.error != null)
+        return (<p>{this.props.data.error}</p>);
+      
+      let users = this.props.data.allUsers;
+      let n = 0;      
       return (
         <div className="listContent">
           <p className="title"><b>All Users</b></p>
+          <Divider/>          
           <List className="list">
-            {users.map(user => <ListItem key={user._id} onClick={this.printUser.bind(this, user)} primaryText={user.username} leftIcon={<Icons.ActionFace />}></ListItem>)}
+            {users.map(user => 
+              <div key={user._id}>
+                <ListItem button onClick={this.printUser.bind(this, user)}>
+                  <ListItemText primary={user.username} />
+                </ListItem>
+                <Divider/>
+              </div>
+            )}
           </List>
         </div>
       );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UsersListComponent  from './components/users-list-component/UsersListComponent'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import CreateUserComponent  from './components/create-user-component/CreateUserComponent'
 import logo from './logo.svg';
 import './App.css';
 
@@ -15,9 +15,8 @@ class App extends Component {
           <h1 className="App-title">Welcome to<br />React-GraphQL-MongoDB</h1>
         </header>
         <div className="App-intro">
-          <MuiThemeProvider>
-            <UsersListComponent />
-          </MuiThemeProvider>
+          <UsersListComponent />
+          <CreateUserComponent />
         </div>
       </div>
     );
