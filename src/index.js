@@ -8,6 +8,10 @@ import userTypeDefs from './schemas/userSchema';
 import userResolvers from './resolvers/userResolvers';
 import courseTypeDefs from './schemas/courseSchema';
 import courseResolvers from './resolvers/courseResolvers';
+import { createServer } from 'http';
+import { execute, subscribe } from 'graphql';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+
 var cors = require('cors');
 
 const app = express();
@@ -44,7 +48,17 @@ app.use('/graphql', express.json(), graphqlExpress({
         Course
     }
 }));
-// Launch Express
-app.listen(app.get('port'), () => {
-    console.log(`Server on port ${app.get('port')}`);
+
+const server = createServer(app);
+// Launch Server
+server.listen(app.get('port'), () => {
+    console.log(`GraphQL Server is now running on http://localhost:${app.get('port')}`);
+    new SubscriptionServer({
+      execute,
+      subscribe,
+      schema,
+    }, {
+      server,
+      path: '/subscriptions',
+    });
 });

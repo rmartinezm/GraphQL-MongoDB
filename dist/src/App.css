@@ -22,7 +22,7 @@
   display: flex;
   flex-wrap: wrap;
   height: 75vh;
-  overflow-y: scroll;
+  overflow-y: hidden;
   font-size: large;
 }
 

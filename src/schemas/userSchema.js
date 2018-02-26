@@ -23,4 +23,8 @@ export default `
         removeCourseToThisUser(id: String!, course: String!): User
         clearCoursesToThisUser(id: String!): User
     }
+
+    type Subscription {
+        userAdded: User
+    }
 `;

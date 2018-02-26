@@ -8,10 +8,6 @@ import List, { ListItem, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
-  
-  constructor(props){
-    super(props);
-  }
 
   render() {
       if (!this.props.data.allUsers || this.props.data.loading) 

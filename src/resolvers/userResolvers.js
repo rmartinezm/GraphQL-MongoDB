@@ -1,3 +1,7 @@
+import { PubSub, withFilter } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
+
 export default {
     Query: {
         allUsers: async (parent, args, { User }) => {
@@ -11,7 +15,9 @@ export default {
     },
     Mutation: {
         createUser: async (parent, args, { User }) => {
-            return await new User(args).save();
+            let user = await new User(args).save();
+            pubsub.publish('userAdded', { user });
+            return user;
         },
         removeUser: async (parent, { id }, { User }) => {
             let user = await User.findOne({'_id': id})
@@ -86,6 +92,16 @@ export default {
                 return null;
             user.courses.splice(0);
             return await user.save();
+        }
+    },
+    Subscription: {
+        userAdded: {
+          subscribe: withFilter(
+            () => pubsub.asyncIterator('userAdded'),
+            (payload, variables) => {
+              return payload._id === variables._id;
+            }
+          )
         }
     }
 }
