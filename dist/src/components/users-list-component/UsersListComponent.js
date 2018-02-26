@@ -9,19 +9,21 @@ import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
   
-    render() {
-      if (this.props.data.loading) 
+  constructor(props){
+    super(props);
+  }
+
+  render() {
+      if (!this.props.data.allUsers || this.props.data.loading) 
         return (<div>Loading . . .</div>);
       if (this.props.data.error != null)
         return (<p>{this.props.data.error}</p>);
-      
-      let users = this.props.data.allUsers;
       return (
         <div className="listContent">
           <p className="title"><b>All Users</b></p>
           <Divider/>          
-          <List className="list">
-            {users.map(user => 
+          <List className="list">  
+            {this.props.data.allUsers.map(user => 
               <div key={user._id}>
                 <ListItem button onClick={this.printUser.bind(this, user)}>
                   <ListItemText primary={user.username} />

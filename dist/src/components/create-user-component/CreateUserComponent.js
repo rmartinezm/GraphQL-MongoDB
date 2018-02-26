@@ -13,12 +13,15 @@ import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/D
 
 class CreateUserComponent extends Component {
 
-    state = {
-        open: false,
-        email: '',
-        password: '',
-        username: ''
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            open: false,
+            email: '',
+            password: '',
+            username: ''
+        };
+    }
 
     handleClickOpen = () => {
         this.setState({ open: true });
@@ -27,9 +30,14 @@ class CreateUserComponent extends Component {
     handleClose = (option) => {
         if (typeof(option) !== 'boolean' || !option) {
             console.log("Usuario no agregado.");
-            this.setState({ open: false });
+            this.setState({ 
+                open: false,
+                email: '',
+                password: '',
+                username: ''
+             });
         } else {
-            if (this.state.email === '' || this.state.email === '' || this.state.email === ''){
+            if (this.state.email === '' || this.state.password === '' || this.state.username === ''){
                 console.log("No se puede man :V");
             } else { 
                 this.props.mutate({
@@ -99,5 +107,6 @@ const CREATE_USER = gql`
 `;
 
 const CreateUserWithMutation = graphql(CREATE_USER)(CreateUserComponent);
+
 
 export default withRoot(CreateUserWithMutation);

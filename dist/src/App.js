@@ -4,21 +4,20 @@ import CreateUserComponent  from './components/create-user-component/CreateUserC
 import logo from './logo.svg';
 import './App.css';
 
-
 class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to<br />React-GraphQL-MongoDB</h1>
-        </header>
-        <div className="App-intro">
-          <UsersListComponent />
-          <CreateUserComponent />
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to<br />React-GraphQL-MongoDB</h1>
+          </header>
+          <div className="App-intro">
+            <UsersListComponent />
+            <CreateUserComponent />
+          </div>
         </div>
-      </div>
     );
   }
 }
