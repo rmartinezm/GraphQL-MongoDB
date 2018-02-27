@@ -9,24 +9,25 @@ import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
 
+  constructor(props){
+    super(props);
+    console.log(props);
+  }
+
+  componentWillMount() {
+    this.props.subscribeToNewUsers();
+}
+
   render() {
-      if (!this.props.data.allUsers || this.props.data.loading) 
+    if (!this.props.allUsers || this.props.loading) 
         return (<div>Loading . . .</div>);
-      if (this.props.data.error != null)
-        return (<p>{this.props.data.error}</p>);
+      if (this.props.error != null)
+        return (<p>{this.props.error}</p>);
       return (
         <div className="listContent">
           <p className="title"><b>All Users</b></p>
           <Divider/>          
           <List className="list">  
-            {this.props.data.allUsers.map(user => 
-              <div key={user._id}>
-                <ListItem button onClick={this.printUser.bind(this, user)}>
-                  <ListItemText primary={user.username} />
-                </ListItem>
-                <Divider/>
-              </div>
-            )}
           </List>
         </div>
       );
@@ -46,6 +47,33 @@ query {
 }
 `;
 
-const UsersListWithData = graphql(ALL_USERS)(UsersListComponent);
+const USER_ADDED = gql`
+  subscription {
+    userAdded {
+      _id
+      username
+    }
+  }
+`;
+
+const UsersListWithData = graphql(ALL_USERS, {
+  name: 'allUsers',
+  props: props => {
+    return {
+      ...props,
+      subscribeToNewUsers: () => {
+        return props.allUsers.subscribeToMore({
+          document: USER_ADDED,
+          updateQuery: (prev, { subscriptionData }) => {
+            console.log(prev);
+            console.log(subscriptionData);
+            console.log(props);
+          }
+        })
+      }
+    }
+  }
+
+})(UsersListComponent);
 
 export default UsersListWithData;
