@@ -9,25 +9,39 @@ import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
 
-  constructor(props){
-    super(props);
-    console.log(props);
+  componentWillMount() {  
+    this.props.data.subscribeToMore({
+      document: USER_ADDED,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.userAdded) {
+          return prev;
+        }
+        const newUser = subscriptionData.userAdded;
+        return Object.assign({}, prev, {
+          allUsers: [ ...prev.allUsers, newUser]
+        });
+      }
+    });
   }
 
-  componentWillMount() {
-    this.props.subscribeToNewUsers();
-}
-
   render() {
-    if (!this.props.allUsers || this.props.loading) 
+    if (!this.props.data.allUsers || this.props.data.loading) 
         return (<div>Loading . . .</div>);
-      if (this.props.error != null)
-        return (<p>{this.props.error}</p>);
+      if (this.props.data.error != null)
+        return (<p>{this.props.data.error}</p>);
       return (
         <div className="listContent">
           <p className="title"><b>All Users</b></p>
           <Divider/>          
           <List className="list">  
+            {this.props.data.allUsers.map(user =>
+              <div key={user._id}>
+                <ListItem button onClick={this.printUser.bind(this, user)}>
+                  <ListItemText primary={user.username} />
+                </ListItem>
+                <Divider/>
+              </div>
+            )}
           </List>
         </div>
       );
@@ -39,12 +53,12 @@ class UsersListComponent extends Component {
 }
 
 const ALL_USERS = gql`
-query {
-  allUsers {
-    _id
-    username
+  query {
+    allUsers {
+      _id
+      username
+    }
   }
-}
 `;
 
 const USER_ADDED = gql`
@@ -56,24 +70,6 @@ const USER_ADDED = gql`
   }
 `;
 
-const UsersListWithData = graphql(ALL_USERS, {
-  name: 'allUsers',
-  props: props => {
-    return {
-      ...props,
-      subscribeToNewUsers: () => {
-        return props.allUsers.subscribeToMore({
-          document: USER_ADDED,
-          updateQuery: (prev, { subscriptionData }) => {
-            console.log(prev);
-            console.log(subscriptionData);
-            console.log(props);
-          }
-        })
-      }
-    }
-  }
-
-})(UsersListComponent);
+const UsersListWithData = graphql(ALL_USERS)(UsersListComponent);
 
 export default UsersListWithData;

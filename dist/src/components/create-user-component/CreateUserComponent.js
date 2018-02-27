@@ -29,7 +29,6 @@ class CreateUserComponent extends Component {
     
     handleClose = (option) => {
         if (typeof(option) !== 'boolean' || !option) {
-            console.log("Usuario no agregado.");
             this.setState({ 
                 open: false,
                 email: '',
@@ -37,8 +36,9 @@ class CreateUserComponent extends Component {
                 username: ''
              });
         } else {
-            if (this.state.email === '' || this.state.password === '' || this.state.username === ''){
-                console.log("No se puede man :V");
+            if (this.state.email.trim() === '' || this.state.password.trim() === '' 
+                || this.state.username.trim() === ''){
+                alert("Todos los campos son obligatorios")
             } else { 
                 this.props.mutate({
                     variables: {
@@ -47,10 +47,10 @@ class CreateUserComponent extends Component {
                         username: this.state.username
                     }
                 }).then(res => {
-                    console.log(res);
+                    alert("Usuario agregado correctamente");
+                    this.setState({ open: false });       
                 });
             }
-            this.setState({ open: false });   
         }
     };
 
