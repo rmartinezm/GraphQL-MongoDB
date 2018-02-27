@@ -16,7 +16,7 @@ export default {
     Mutation: {
         createUser: async (parent, args, { User }) => {
             let user = await new User(args).save();
-            pubsub.publish('userAdded', { user });
+            pubsub.publish('userAdded', { userAdded: user });
             return user;
         },
         removeUser: async (parent, { id }, { User }) => {
@@ -96,12 +96,7 @@ export default {
     },
     Subscription: {
         userAdded: {
-          subscribe: withFilter(
-            () => pubsub.asyncIterator('userAdded'),
-            (payload, variables) => {
-              return payload._id === variables._id;
-            }
-          )
+          subscribe: () => pubsub.asyncIterator('userAdded')
         }
     }
 }
