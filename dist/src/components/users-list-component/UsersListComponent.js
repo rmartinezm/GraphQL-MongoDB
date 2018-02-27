@@ -9,7 +9,13 @@ import Divider from 'material-ui/Divider';
 
 class UsersListComponent extends Component {
 
-  componentWillMount() {  
+  constructor(props){
+    super(props);
+    this.subscription = null;
+  }
+
+  componentWillMount() {
+    // USER ADDED SUBSCRIPTION
     this.props.data.subscribeToMore({
       document: USER_ADDED,
       updateQuery: (prev, { subscriptionData }) => {
@@ -19,6 +25,23 @@ class UsersListComponent extends Component {
         const newUser = subscriptionData.userAdded;
         return Object.assign({}, prev, {
           allUsers: [ ...prev.allUsers, newUser]
+        });
+      }
+    });
+    // USER REMOVED:
+    this.props.data.subscribeToMore({
+      document: USER_REMOVED,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.userRemoved)
+          return prev;
+        const removedUser = subscriptionData.userRemoved;
+        let newArray = [];
+        prev.allUsers.forEach(user => {
+          if (user._id !== removedUser._id)
+            newArray.push(user);
+        });
+        return Object.assign({}, prev, {
+          allUsers: newArray
         });
       }
     });
@@ -64,6 +87,15 @@ const ALL_USERS = gql`
 const USER_ADDED = gql`
   subscription {
     userAdded {
+      _id
+      username
+    }
+  }
+`;
+
+const USER_REMOVED = gql`
+  subscription {
+    userRemoved {
       _id
       username
     }

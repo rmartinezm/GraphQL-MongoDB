@@ -20,10 +20,11 @@ export default {
             return user;
         },
         removeUser: async (parent, { id }, { User }) => {
-            let user = await User.findOne({'_id': id})
-                /* USER NOT FOUND*/
-                .catch(err => null);
-            return user == null? null: await user.remove();
+            let user = await User.findOne({'_id': id}).catch(err => null);
+            if (user == null)
+                return null;
+            pubsub.publish('userRemoved', { userRemoved: user});
+            return await user.remove();
         },
         clearUsersDatabase: async (parent, args, { User }) => {
             let any = await User.remove({});
@@ -97,6 +98,9 @@ export default {
     Subscription: {
         userAdded: {
           subscribe: () => pubsub.asyncIterator('userAdded')
+        },
+        userRemoved: {
+          subscribe: () => pubsub.asyncIterator('userRemoved')
         }
     }
 }

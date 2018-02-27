@@ -25,6 +25,7 @@ export default `
     }
 
     type Subscription {
-        userAdded: User
+        userAdded: User!
+        userRemoved: User!
     }
 `;
